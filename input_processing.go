@@ -1,51 +1,48 @@
 package main
 
-import (
-	"fmt"
-)
-
-// A sentence object
-type Sentence struct {
-	data         string
-	category     string
-	literal_data []string
-}
-
-// Am aggregation of all sentence
-// objects
-type SentencesList struct {
-	main_context string
-	sentences    []Sentence
-}
-
-type Recognized struct {
-	sentences []Sentence
-}
-
-type Unrecognized struct {
-	sentences []Sentence
-}
-
-// split the sentence data to the
-// separate words
-func get_literal_data(inp string, sym string) {}
-
-// format each string
-// fraction to the Sentence
-// object
-func format_sentence(item string) Sentence {}
-
 // aggregate a list of sentence
 // objects
-func gather_sentences(fractions []string) []Sentence {}
+func gather_sentences(fractions []string) []Sentence {
+	var s_objects []Sentence = []Sentence{}
+	if len(fractions) != 0 {
+		for i := 0; i < len(fractions); i++ {
+			s_objects = append(
+				s_objects,
+				Sentence{
+					fractions[i],
+					"unknown",
+					split_to_chunks(fractions[i], " "),
+				},
+			)
+		}
+	}
+	return s_objects
+}
 
 // receive the bytes data
 // from the external client
-// bytes -> string -> []string -> []Sentence
-func process_input(inp byte) []string {}
+// and split to sentences
+func split_to_chunks(data string, sym string) []string {
+	chunks := []string{}
+	if data != "" {
+		flag := 0
+		for i := 0; i < len(data); i++ {
+			if string(data[i]) == sym {
+				chunks = append(chunks, data[flag:i])
+				flag = (i + 1)
+			}
+		}
+	}
+	return chunks
+}
 
-func main() {
-	input := "This is a test input. All the data is not relevant. The facts described are fictional."
-	fmt.Println(input)
-
+// take the input from the
+// the external client
+// and process it,
+// collecting a list of
+// formatted sentences
+func ProcessInput(inp string) []Sentence {
+	string_list := split_to_chunks(inp, ".")
+	sentences := gather_sentences(string_list)
+	return sentences
 }
