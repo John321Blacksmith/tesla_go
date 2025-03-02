@@ -1,8 +1,12 @@
-package main
+package input_processing
+
+import (
+	"tesla_go/d_s/d_s"
+)
 
 // aggregate a list of sentence
 // objects
-func gather_sentences(fractions []string) []Sentence {
+func gather_sentences(fractions []string) []d_s.Sentence {
 	var s_objects []Sentence = []Sentence{}
 	if len(fractions) != 0 {
 		for i := 0; i < len(fractions); i++ {

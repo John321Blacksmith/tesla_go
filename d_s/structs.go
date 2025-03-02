@@ -1,4 +1,4 @@
-package main
+package d_s
 
 // category object from dataset
 type Category struct {
