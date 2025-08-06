@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"tesla_go/internal/domain"
+	"tesla_go/pkg/classifier"
 )
 
 type InputManagement interface {
@@ -15,22 +16,18 @@ type InputUseCase struct {
 	InputManagement
 }
 
-func NewInputUseCase(behaviour InputManagement) InputUseCase {
+func NewInputUseCase() InputUseCase {
 	return InputUseCase{}
 }
 
-func ProcessInput(data []byte) string {
-	return ""
+func (uc *InputUseCase) SplitToParticles(data string, sym string) []string {
+	return classifier.SplitToParticles(data, sym)
 }
 
-func SplitToParticles(data string, sym string) []string {
-	return nil
+func (uc *InputUseCase) RefineSentences(rawSentences []string) []string {
+	return classifier.RefineSentences(rawSentences)
 }
 
-func RefineSentences(rawSentences []string) []string {
-	return nil
-}
-
-func AggregateSentences(refinedSentences []string) []domain.Sentence {
-	return nil
+func (uc *InputUseCase) AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
+	return classifier.AggregateSentences(refinedSentences)
 }
