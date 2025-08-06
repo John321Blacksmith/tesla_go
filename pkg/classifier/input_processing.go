@@ -12,13 +12,6 @@ func is_alpha(sym byte) bool {
 		(sym >= 97 && sym <= 122)
 }
 
-// take input from an
-// external source and
-// format it to the sequence
-func ProcessInput(data []byte) string {
-	return string(data)
-}
-
 // check each word for
 // having a non alphabetic
 // symbol
