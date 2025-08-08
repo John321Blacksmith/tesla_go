@@ -5,6 +5,19 @@ import (
 	"tesla_go/internal/domain"
 )
 
+// this actor performs
+// input processing
+// work and prepares
+// sentences for further
+// classification
+type InputManager struct{}
+
+// implement new
+// input manager
+func NewInputManager() *InputManager {
+	return &InputManager{}
+}
+
 // check the symbol
 // if it's alphabetic
 func is_alpha(sym byte) bool {
@@ -15,7 +28,7 @@ func is_alpha(sym byte) bool {
 // check each word for
 // having a non alphabetic
 // symbol
-func RefineSentences(particles []string) []string {
+func (m *InputManager) RefineSentences(particles []string) []string {
 	var refined_sentences []string
 	if len(particles) != 0 {
 		for i := range len(particles) {
@@ -38,7 +51,7 @@ func RefineSentences(particles []string) []string {
 // receive the data
 // from the external client
 // and split to sentences
-func SplitToParticles(data string, sym string) []string {
+func (*InputManager) SplitToParticles(data string, sym string) []string {
 	partiles := []string{}
 	if data != "" {
 		flag := 0
@@ -56,7 +69,7 @@ func SplitToParticles(data string, sym string) []string {
 // format every string
 // into the sentence
 // object
-func AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
+func (m *InputManager) AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
 	var sentenceCollection []domain.Sentence
 	if len(refinedSentences) != 0 {
 		for i := range len(refinedSentences) {
@@ -64,7 +77,7 @@ func AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
 				sentenceCollection,
 				domain.Sentence{
 					Category:    "unknown",
-					LiteralData: SplitToParticles(refinedSentences[i], ""),
+					LiteralData: m.SplitToParticles(refinedSentences[i], ""),
 				},
 			)
 		}
