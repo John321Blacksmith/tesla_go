@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"tesla_go/internal/usecase"
+	"tesla_go/pkg/classifier"
 )
 
 func main() {
@@ -10,7 +11,8 @@ func main() {
 			  This kind of food was liked by almost everyone in the world.
 			  because of it's taste. and unique nutrient features`
 
-	inputProcessing := usecase.NewInputUseCase()
+	inputManager := classifier.NewInputManager()
+	inputProcessing := usecase.NewInputUseCase(inputManager)
 	rawSentences := inputProcessing.SplitToParticles(input, ".")
 	fmt.Println(len(rawSentences))
 	refinedSentences := inputProcessing.RefineSentences(rawSentences)
