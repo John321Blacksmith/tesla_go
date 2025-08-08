@@ -77,7 +77,7 @@ func (m *InputManager) AggregateSentences(refinedSentences []string) ([]domain.S
 				sentenceCollection,
 				domain.Sentence{
 					Category:    "unknown",
-					LiteralData: m.SplitToParticles(refinedSentences[i], ""),
+					LiteralData: m.SplitToParticles(refinedSentences[i], " "),
 				},
 			)
 		}
