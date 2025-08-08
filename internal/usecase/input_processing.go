@@ -14,8 +14,8 @@ type InputUseCase struct {
 	behaviour InputManagement
 }
 
-func NewInputUseCase(behaviour InputManagement) InputUseCase {
-	return InputUseCase{
+func NewInputUseCase(behaviour InputManagement) *InputUseCase {
+	return &InputUseCase{
 		behaviour: behaviour,
 	}
 }
