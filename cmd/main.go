@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"tesla_go/internal/usecase"
+	"strings"
 	"tesla_go/pkg/classifier"
 )
 
@@ -12,16 +12,31 @@ func main() {
 			  because of it's taste. and unique nutrient features`
 
 	inputManager := classifier.NewInputManager()
-	inputProcessing := usecase.NewInputUseCase(inputManager)
-	rawSentences := inputProcessing.SplitToParticles(input, ".")
-	fmt.Println(len(rawSentences))
-	refinedSentences := inputProcessing.RefineSentences(rawSentences)
-	fmt.Println(len(refinedSentences))
-	sentenceCollection, err := inputProcessing.AggregateSentences(refinedSentences)
+	rawSentences, err := inputManager.SplitIntoParticles(input, ".")
 	if err != nil {
 		fmt.Println(err)
 	}
-	for i := range len(sentenceCollection) {
-		fmt.Println(sentenceCollection[i])
+	for i := range len(rawSentences) {
+		fmt.Println("////")
+		trimmedSentence := strings.TrimSpace(rawSentences[i])
+		words := strings.Split(trimmedSentence, " ")
+		refinedWords := []string{}
+		for j := range len(words) {
+			var word string
+			var ind int
+			for l := range len(words[j]) {
+				letter := words[j][l]
+				if !classifier.IsAlpha(letter) {
+					ind = strings.Index(words[j], string(letter))
+				}
+			}
+			if ind == (len(words[j]) - 1) {
+				word = words[j][:ind]
+			} else {
+				word = words[j]
+			}
+			refinedWords = append(refinedWords, word)
+		}
+		fmt.Println(refinedWords)
 	}
 }
