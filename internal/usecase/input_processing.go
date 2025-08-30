@@ -5,9 +5,9 @@ import (
 )
 
 type InputManagement interface {
-	SplitIntoParticles(data string, sym string) []string
+	SplitToParticles(data string, sym string) []string
 	RefineSentences(rawSentences []string) [][]string
-	AggregateSentences(refinedSentences [][]string) ([]domain.Sentence, error)
+	AggregateSentences(refinedSentences [][]string) []domain.Sentence
 }
 
 type InputUseCase struct {
@@ -21,13 +21,13 @@ func NewInputUseCase(actor InputManagement) *InputUseCase {
 }
 
 func (uc *InputUseCase) SplitToParticles(data string, sym string) []string {
-	return uc.behaviour.SplitIntoParticles(data, sym)
+	return uc.behaviour.SplitToParticles(data, sym)
 }
 
-func (uc *InputUseCase) RefineSentences(rawSentences []string) []string {
+func (uc *InputUseCase) RefineSentences(rawSentences []string) [][]string {
 	return uc.behaviour.RefineSentences(rawSentences)
 }
 
-func (uc *InputUseCase) AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
+func (uc *InputUseCase) AggregateSentences(refinedSentences [][]string) []domain.Sentence {
 	return uc.behaviour.AggregateSentences(refinedSentences)
 }
