@@ -58,14 +58,13 @@ func refineMember(member string) string {
 // split a sentence to
 // members
 func splitToMembers(sentence string) []string {
-	var members []string
-	members = strings.Split(sentence, " ")
+	members := strings.Split(sentence, " ")
 	return members
 }
 
 func refineMembers(sentence string) []string {
 	var refinedMembers []string
-	members := splitToMembers(sentence)
+	members := splitToMembers(strings.TrimSpace(sentence))
 	for i := range len(members) {
 		refinedMember := refineMember(members[i])
 		refinedMembers = append(refinedMembers, refinedMember)
@@ -91,6 +90,16 @@ func (m *InputManager) RefineSentences(sentences []string) [][]string {
 // into the sentence
 // object
 func (m *InputManager) AggregateSentences(refinedSentences [][]string) []domain.Sentence {
-	var sentenceCollection []domain.Sentence
+	sentenceCollection := []domain.Sentence{}
+
+	for _, v := range refinedSentences {
+		sentenceCollection = append(
+			sentenceCollection,
+			domain.Sentence{
+				Category:    "unknown",
+				LiteralData: v,
+			},
+		)
+	}
 	return sentenceCollection
 }
