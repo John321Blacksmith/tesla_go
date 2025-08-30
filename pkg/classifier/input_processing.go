@@ -28,7 +28,7 @@ func isAlpha(sym byte) bool {
 // receive the data
 // from the external client
 // and split to sentences
-func (m *InputManager) SplitIntoSentences(data string) []string {
+func (m *InputManager) SplitToParticles(data string) []string {
 	if len(data) != 0 {
 		sentences := strings.Split(data, ".")
 		return sentences
