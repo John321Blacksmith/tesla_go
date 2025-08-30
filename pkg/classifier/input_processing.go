@@ -1,7 +1,7 @@
 package classifier
 
 import (
-	"fmt"
+	"strings"
 	"tesla_go/internal/domain"
 )
 
@@ -20,68 +20,77 @@ func NewInputManager() *InputManager {
 
 // check the symbol
 // if it's alphabetic
-func is_alpha(sym byte) bool {
+func isAlpha(sym byte) bool {
 	return (sym >= 65 && sym <= 90) ||
 		(sym >= 97 && sym <= 122)
-}
-
-// check each word for
-// having a non alphabetic
-// symbol
-func (m *InputManager) RefineSentences(particles []string) []string {
-	var refined_sentences []string
-	if len(particles) != 0 {
-		for i := range len(particles) {
-			if len(particles[i]) != 0 {
-				signs_count := 0
-				for j := range len(particles[i]) {
-					if !is_alpha(particles[i][j]) {
-						signs_count += 1
-					}
-				}
-				if signs_count == 0 {
-					refined_sentences = append(refined_sentences, particles[i])
-				}
-			}
-		}
-	}
-	return refined_sentences
 }
 
 // receive the data
 // from the external client
 // and split to sentences
-func (*InputManager) SplitToParticles(data string, sym string) []string {
-	partiles := []string{}
-	if data != "" {
-		flag := 0
-		for i := range len(data) {
-			if string(data[i]) == sym {
-				partiles = append(partiles, data[flag:i])
-				flag = (i + 1)
-			}
-		}
-		partiles = append(partiles, data[flag:])
+func (m *InputManager) SplitIntoSentences(data string) []string {
+	if len(data) != 0 {
+		sentences := strings.Split(data, ".")
+		return sentences
 	}
-	return partiles
+	return nil
+}
+
+// check each sentence member
+// if it's a proper word
+func refineMember(member string) string {
+	var refinedMember string
+	var ind int
+	for i := range len(member) {
+		letter := member[i]
+		if !isAlpha(letter) {
+			ind = strings.Index(member, string(letter))
+		}
+	}
+	if ind == (len(member) - 1) {
+		refinedMember = member[:ind]
+	} else {
+		refinedMember = member
+	}
+	return refinedMember
+}
+
+// split a sentence to
+// members
+func splitToMembers(sentence string) []string {
+	var members []string
+	members = strings.Split(sentence, " ")
+	return members
+}
+
+func refineMembers(sentence string) []string {
+	var refinedMembers []string
+	members := splitToMembers(sentence)
+	for i := range len(members) {
+		refinedMember := refineMember(members[i])
+		refinedMembers = append(refinedMembers, refinedMember)
+	}
+	return refinedMembers
+}
+
+// check each word for
+// having a non alphabetic
+// symbol
+func (m *InputManager) RefineSentences(sentences []string) [][]string {
+	var refinedSentences [][]string
+	if len(sentences) != 0 {
+		for i := range len(sentences) {
+			refinedMembers := refineMembers(sentences[i])
+			refinedSentences = append(refinedSentences, refinedMembers)
+		}
+	}
+	return refinedSentences
 }
 
 // format every string
 // into the sentence
 // object
-func (m *InputManager) AggregateSentences(refinedSentences []string) ([]domain.Sentence, error) {
+func (m *InputManager) AggregateSentences(refinedSentences [][]string) []domain.Sentence {
 	var sentenceCollection []domain.Sentence
-	if len(refinedSentences) != 0 {
-		for i := range len(refinedSentences) {
-			sentenceCollection = append(
-				sentenceCollection,
-				domain.Sentence{
-					Category:    "unknown",
-					LiteralData: m.SplitToParticles(refinedSentences[i], " "),
-				},
-			)
-		}
-		return sentenceCollection, nil
-	}
-	return nil, fmt.Errorf("no sentences received")
+	return sentenceCollection
 }

@@ -12,10 +12,8 @@ func main() {
 			  because of it's taste. and unique nutrient features`
 
 	inputManager := classifier.NewInputManager()
-	rawSentences, err := inputManager.SplitIntoParticles(input, ".")
-	if err != nil {
-		fmt.Println(err)
-	}
+	rawSentences := inputManager.SplitIntoSentences(input)
+
 	for i := range len(rawSentences) {
 		fmt.Println("////")
 		trimmedSentence := strings.TrimSpace(rawSentences[i])
@@ -26,7 +24,7 @@ func main() {
 			var ind int
 			for l := range len(words[j]) {
 				letter := words[j][l]
-				if !classifier.IsAlpha(letter) {
+				if !classifier.isAlpha(letter) {
 					ind = strings.Index(words[j], string(letter))
 				}
 			}

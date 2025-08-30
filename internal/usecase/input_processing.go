@@ -5,23 +5,23 @@ import (
 )
 
 type InputManagement interface {
-	SplitToParticles(data string, sym string) []string
-	RefineSentences(rawSentences []string) []string
-	AggregateSentences(refinedSentences []string) ([]domain.Sentence, error)
+	SplitIntoParticles(data string, sym string) []string
+	RefineSentences(rawSentences []string) [][]string
+	AggregateSentences(refinedSentences [][]string) ([]domain.Sentence, error)
 }
 
 type InputUseCase struct {
 	behaviour InputManagement
 }
 
-func NewInputUseCase(behaviour InputManagement) *InputUseCase {
+func NewInputUseCase(actor InputManagement) *InputUseCase {
 	return &InputUseCase{
-		behaviour: behaviour,
+		behaviour: actor,
 	}
 }
 
 func (uc *InputUseCase) SplitToParticles(data string, sym string) []string {
-	return uc.behaviour.SplitToParticles(data, sym)
+	return uc.behaviour.SplitIntoParticles(data, sym)
 }
 
 func (uc *InputUseCase) RefineSentences(rawSentences []string) []string {
